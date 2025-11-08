@@ -10,6 +10,7 @@ export default function BillAnalysisView({ billId }) {
 
   useEffect(() => {
     fetchBillData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billId]);
 
   const fetchBillData = async () => {

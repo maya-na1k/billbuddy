@@ -16,6 +16,7 @@ export default function Dashboard({ user, onLogout }) {
 
   useEffect(() => {
     fetchBills();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchBills = async () => {

@@ -1,78 +1,103 @@
-// Simplified OCR service with better error handling
+import OpenAI from 'openai';
 
-// Main function - always returns something, never crashes
+const openai = new OpenAI({
+  apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true
+});
+
 export async function extractTextFromFile(file, onProgress) {
-    console.log('OCR: Processing file:', file.name, file.type);
+  try {
+    console.log('=== OCR START ===');
+    console.log('File:', file.name, 'Type:', file.type);
     
-    // Report initial progress
     if (onProgress) onProgress(10);
     
-    // Return mock data immediately for demo purposes
-    // This ensures the app never crashes on OCR
-    if (onProgress) onProgress(50);
+    if (file.type === 'application/pdf') {
+      console.log('PDF - skipping Vision API');
+      if (onProgress) onProgress(100);
+      return {
+        text: 'PDF - text extraction not supported',
+        confidence: 0,
+        method: 'pdf-skip'
+      };
+    }
     
-    const mockText = generateMockBillText();
+    console.log('Converting to base64...');
+    const base64Image = await convertFileToBase64(file);
+    
+    if (onProgress) onProgress(30);
+    
+    console.log('Calling GPT-4o for better extraction...');
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // Using full GPT-4o for better accuracy
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: `Extract ALL text from this medical bill image with extreme precision. Include:
+- Patient name, DOB, account numbers
+- Provider/hospital name and address
+- Service dates
+- EVERY itemized charge with: date, description, CPT/REV/NDC code, quantity, and ALL dollar amounts (Charges, Allowed, Insurance Paid, Patient Resp)
+- Total charges, insurance payments, patient responsibility
+- Any notes about denials or authorizations
+
+Be thorough - extract every line item and every number exactly as shown.`
+            },
+            {
+              type: "image_url",
+              image_url: { url: base64Image }
+            }
+          ]
+        }
+      ],
+      max_tokens: 4000
+    });
+    
+    if (onProgress) onProgress(90);
+    
+    const extractedText = response.choices[0].message.content;
+    
+    console.log('=== OCR COMPLETE ===');
+    console.log('Length:', extractedText.length);
+    console.log('Preview:', extractedText.substring(0, 300));
     
     if (onProgress) onProgress(100);
     
     return {
-      text: mockText,
-      confidence: 75,
-      method: 'demo-mode'
+      text: extractedText,
+      confidence: 95,
+      method: 'gpt-4o-vision'
     };
-  }
-  
-  // Generate realistic mock bill text
-  function generateMockBillText() {
-    return `MEDICAL BILL
-  City General Hospital
-  123 Medical Center Drive
-  Anytown, ST 12345
-  Phone: (555) 123-4567
-  
-  PATIENT INFORMATION
-  Name: John Doe
-  Date of Birth: 01/15/1980
-  Account Number: ACC-2024-${Math.floor(Math.random() * 10000)}
-  Date of Service: ${new Date().toLocaleDateString()}
-  
-  PROVIDER INFORMATION
-  Provider: Dr. Jane Smith, MD
-  Department: Internal Medicine
-  NPI: 1234567890
-  
-  ITEMIZED CHARGES
-  
-  99213    Office Visit - Established Patient, Moderate      $145.00
-  85025    Complete Blood Count (CBC) with Differential      $28.50
-  80053    Comprehensive Metabolic Panel                     $35.00
-  71045    Chest X-Ray, Single View                          $89.00
-  93000    Electrocardiogram (EKG), Complete                 $45.00
-  36415    Routine Venipuncture                              $12.00
-  
-                                                Subtotal:    $354.50
-                                    Insurance Payment:      -$212.70
-                                Patient Responsibility:     $141.80
-  
-  PAYMENT DUE: $141.80
-  Due Date: ${new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()}
-  
-  Please remit payment within 30 days to avoid late fees.
-  For billing questions, call (555) 123-4567 ext. 200`;
-  }
-  
-  // Clean extracted text
-  export function cleanExtractedText(text) {
-    if (!text) return '';
-    return text.replace(/\s+/g, ' ').trim();
-  }
-  
-  // Extract patterns (placeholder for future enhancement)
-  export function extractBillPatterns(text) {
+    
+  } catch (error) {
+    console.error('OCR ERROR:', error);
+    if (onProgress) onProgress(100);
     return {
-      dates: [],
-      amounts: [],
-      codes: [],
-      accountNumbers: []
+      text: 'OCR failed',
+      confidence: 0,
+      method: 'error',
+      error: error.message
     };
   }
+}
+
+function convertFileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = () => reject(new Error('File read failed'));
+    reader.readAsDataURL(file);
+  });
+}
+
+export function cleanExtractedText(text) {
+  if (!text) return '';
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+export function extractBillPatterns() {
+  return { dates: [], amounts: [], codes: [], accountNumbers: [] };
+}

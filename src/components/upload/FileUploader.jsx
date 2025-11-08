@@ -104,7 +104,16 @@ export default function FileUploader({ onUploadComplete }) {
 
       // Send to AI for analysis
       console.log('Starting AI analysis...');
-      await analyzeMedicalBill(billData.id, extractedText);
+      
+      try {
+        await Promise.race([
+          analyzeMedicalBill(billData.id, extractedText),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Analysis timeout')), 60000))
+        ]);
+      } catch (analysisError) {
+        console.error('Analysis error:', analysisError);
+        alert('Analysis took too long or failed. Bill uploaded but not analyzed yet.');
+      }
       console.log('AI analysis complete!');
 
       setProgress(100);
