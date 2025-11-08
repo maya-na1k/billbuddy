@@ -15,13 +15,13 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
               onClick={onShowLogin}
               className="px-5 py-2 text-gray-700 hover:text-purple-600 font-medium transition-colors"
             >
-              Sign In
+              Log In
             </button>
             <button
               onClick={onShowSignup}
               className="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-full hover:shadow-lg transform hover:scale-105 transition-all font-medium"
             >
-              Get Started
+              Sign Up
             </button>
           </div>
         </div>
