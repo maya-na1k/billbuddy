@@ -1,4 +1,8 @@
 import OpenAI from 'openai';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Set up PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 const openai = new OpenAI({
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,
@@ -12,24 +16,20 @@ export async function extractTextFromFile(file, onProgress) {
     
     if (onProgress) onProgress(10);
     
+    // Handle PDFs
     if (file.type === 'application/pdf') {
-      console.log('PDF - skipping Vision API');
-      if (onProgress) onProgress(100);
-      return {
-        text: 'PDF - text extraction not supported',
-        confidence: 0,
-        method: 'pdf-skip'
-      };
+      console.log('PDF detected - extracting text...');
+      return await extractTextFromPDF(file, onProgress);
     }
     
-    console.log('Converting to base64...');
+    // Handle images
+    console.log('Image detected - using GPT-4o Vision...');
     const base64Image = await convertFileToBase64(file);
     
     if (onProgress) onProgress(30);
     
-    console.log('Calling GPT-4o for better extraction...');
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", // Using full GPT-4o for better accuracy
+      model: "gpt-4o",
       messages: [
         {
           role: "user",
@@ -79,6 +79,75 @@ Be thorough - extract every line item and every number exactly as shown.`
       text: 'OCR failed',
       confidence: 0,
       method: 'error',
+      error: error.message
+    };
+  }
+}
+
+async function extractTextFromPDF(file, onProgress) {
+  try {
+    console.log('Reading PDF file...');
+    
+    // Read PDF file as array buffer
+    const arrayBuffer = await file.arrayBuffer();
+    
+    if (onProgress) onProgress(20);
+    
+    // Load PDF document
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    console.log('PDF loaded, pages:', pdf.numPages);
+    
+    if (onProgress) onProgress(30);
+    
+    let fullText = '';
+    
+    // Extract text from each page
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      
+      // Combine text items
+      const pageText = textContent.items
+        .map(item => item.str)
+        .join(' ');
+      
+      fullText += pageText + '\n\n';
+      
+      // Update progress
+      const progress = 30 + Math.floor((pageNum / pdf.numPages) * 60);
+      if (onProgress) onProgress(progress);
+      
+      console.log(`Page ${pageNum}/${pdf.numPages} extracted`);
+    }
+    
+    console.log('=== PDF TEXT EXTRACTION COMPLETE ===');
+    console.log('Total text length:', fullText.length);
+    console.log('Preview:', fullText.substring(0, 500));
+    
+    if (onProgress) onProgress(100);
+    
+    // If we got very little text, the PDF might be scanned images
+    if (fullText.length < 100) {
+      console.warn('Low text extracted - PDF might be scanned images');
+      return {
+        text: fullText || 'PDF appears to be scanned images with no extractable text',
+        confidence: 20,
+        method: 'pdf-text-low'
+      };
+    }
+    
+    return {
+      text: fullText,
+      confidence: 85,
+      method: 'pdf-text-extraction'
+    };
+    
+  } catch (error) {
+    console.error('PDF extraction error:', error);
+    return {
+      text: 'PDF extraction failed: ' + error.message,
+      confidence: 0,
+      method: 'pdf-error',
       error: error.message
     };
   }
