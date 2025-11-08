@@ -110,7 +110,13 @@ export default function FileUploader({ onUploadComplete }) {
         });
       }
 
-      alert(`Bill uploaded and text extracted successfully!\nOCR Confidence: ${Math.round(ocrResult.confidence)}%\nExtracted ${extractedText.length} characters`);
+      // Show success message
+      alert('✅ Bill analyzed successfully! Redirecting to analysis...');
+      
+      // Redirect to bill detail page after short delay
+      setTimeout(() => {
+        window.location.href = `/bill/${billData.id}`;
+      }, 1500);
 
     } catch (error) {
       console.error('Upload error:', error);

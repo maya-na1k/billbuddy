@@ -5,6 +5,7 @@ import LoginForm from './components/auth/LoginForm';
 import SignupForm from './components/auth/SignupForm';
 import Dashboard from './pages/Dashboard';
 import BillDetail from './pages/BillDetail';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -39,10 +40,17 @@ function App() {
   }
 
   if (!user) {
-    return showSignup ? (
-      <SignupForm onToggleForm={() => setShowSignup(false)} />
-    ) : (
-      <LoginForm onToggleForm={() => setShowSignup(true)} />
+    if (showSignup === 'signup') {
+      return <SignupForm onToggleForm={() => setShowSignup(null)} />;
+    }
+    if (showSignup === 'login') {
+      return <LoginForm onToggleForm={() => setShowSignup('signup')} />;
+    }
+    return (
+      <LandingPage
+        onShowLogin={() => setShowSignup('login')}
+        onShowSignup={() => setShowSignup('signup')}
+      />
     );
   }
 

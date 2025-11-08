@@ -1,70 +1,98 @@
-# Getting Started with Create React App
+# BillBuddy - AI-Powered Medical Bill Advocate
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+BillBuddy is an AI-powered web application that helps patients analyze medical bills, detect billing errors, and generate dispute letters automatically.
 
-## Available Scripts
+## 🌟 Features
 
-In the project directory, you can run:
+- **AI Bill Analysis**: Upload medical bills (PDF/Image) and get instant AI-powered analysis
+- **Error Detection**: Automatically identifies:
+  - Duplicate charges
+  - Overcharges vs Medicare benchmarks
+  - Invalid billing codes
+  - Missing documentation
+- **OCR Text Extraction**: Extracts text from images and PDFs using Tesseract.js
+- **Dispute Tools**: Auto-generates professional dispute letters and email templates
+- **Savings Calculator**: Estimates potential savings from billing errors
+- **Secure Storage**: Bills and analysis stored securely in Supabase
 
-### `npm start`
+## 🛠️ Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React.js, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL + Storage)
+- **AI**: OpenAI GPT-4o-mini
+- **OCR**: Tesseract.js
+- **Authentication**: Supabase Auth
+- **Deployment**: Vercel (planned)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📦 Installation
 
-### `npm test`
+1. Clone the repository:
+```bash
+git clone https://github.com/maya-na1k/billbuddy.git
+cd billbuddy
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Install dependencies:
+```bash
+npm install
+```
 
-### `npm run build`
+3. Create `.env` file with your credentials:
+```
+REACT_APP_SUPABASE_URL=your_supabase_url
+REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+REACT_APP_OPENAI_API_KEY=your_openai_api_key
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Start the development server:
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🚀 Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Sign up for an account
+2. Upload a medical bill (PDF or image)
+3. Wait for AI analysis (30-60 seconds)
+4. Review detected issues and potential savings
+5. Generate dispute letters/emails
+6. Download or copy documents to send to billing department
 
-### `npm run eject`
+## 🎯 Problem Solved
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Medical billing errors affect 80% of medical bills, costing patients billions annually. BillBuddy democratizes access to billing expertise by:
+- Making bill analysis accessible to everyone
+- Reducing financial stress during medical crises
+- Empowering patients to challenge unfair charges
+- Providing professional dispute tools without expensive advocates
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📊 Database Schema
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **profiles**: User information
+- **medical_bills**: Uploaded bills metadata
+- **bill_line_items**: Individual charges from bills
+- **bill_analyses**: AI analysis results
+- **dispute_documents**: Generated dispute letters
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🔐 Security
 
-## Learn More
+- Row-level security (RLS) enabled on all tables
+- Secure file storage with user-based access control
+- Environment variables for API keys
+- Authentication required for all features
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🤝 Contributing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This is a hackathon project. Contributions welcome!
 
-### Code Splitting
+## 📝 License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+MIT License
 
-### Analyzing the Bundle Size
+## 👥 Team
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Built with ❤️ for patient advocacy
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Note**: This is an MVP built for demonstration purposes. Always consult with healthcare professionals and billing experts for official disputes.
