@@ -12,7 +12,9 @@ BillBuddy is a web application that leverages artificial intelligence to empower
       * Overcharges compared to standard benchmarks (e.g., Medicare rates)
       * Invalid or outdated billing codes (e.g., CPT, ICD-10)
       * Missing or insufficient documentation
-  * **OCR Text Extraction:** Utilizes Tesseract.js for robust and accurate text extraction from uploaded image and PDF documents.
+  * **OCR Text Extraction:** Utilizes a hybrid approach for robust text extraction:
+      * **PDF.js** for extracting text directly from PDF documents
+      * **GPT-4o Vision** for accurate OCR on image files (JPG, PNG)
   * **Dispute Tools:** Streamlines the challenge process by auto-generating clear, professional dispute letters and email templates ready for submission.
   * **Savings Calculator:** Provides an immediate estimate of potential financial savings resulting from identified billing errors.
   * **Secure Data Storage:** All uploaded bills, analyses, and user data are stored securely using Supabase.
@@ -23,8 +25,12 @@ BillBuddy is a web application that leverages artificial intelligence to empower
 
   * **Frontend:** React.js, Tailwind CSS
   * **Backend & Database:** Supabase (PostgreSQL, Realtime, and Storage)
-  * **Artificial Intelligence:** OpenAI GPT-4o-mini
-  * **Optical Character Recognition (OCR):** Tesseract.js
+  * **Artificial Intelligence:** 
+      * OpenAI GPT-4o for bill analysis and data extraction
+      * OpenAI GPT-4o-mini for dispute letter generation
+  * **Optical Character Recognition (OCR):** 
+      * PDF.js for PDF text extraction
+      * GPT-4o Vision for image OCR
   * **Authentication:** Supabase Auth
   * **Deployment (Planned):** Vercel
 
