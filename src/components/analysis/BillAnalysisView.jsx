@@ -171,14 +171,13 @@ export default function BillAnalysisView({ billId }) {
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Description</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Qty</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Amount</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {lineItems.map((item) => (
                 <tr 
                   key={item.id} 
-                  className={item.flag_type ? 'bg-gradient-to-r from-red-50 to-pink-50' : 'hover:bg-purple-50/30 transition-colors'}
+                  className="hover:bg-purple-50/30 transition-colors"
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                     {item.code || 'N/A'}
@@ -191,17 +190,6 @@ export default function BillAnalysisView({ billId }) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                     ${item.charge_amount?.toFixed(2) || '0.00'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {item.flag_type ? (
-                      <span className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full">
-                        {item.flag_type}
-                      </span>
-                    ) : (
-                      <span className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full">
-                        OK
-                      </span>
-                    )}
                   </td>
                 </tr>
               ))}

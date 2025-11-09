@@ -1,4 +1,4 @@
-import { Zap, FileText, FileBadge, DollarSign, ArrowRight } from 'lucide-react';
+import { Zap, FileText, DollarSign, ArrowRight } from 'lucide-react';
 
 // Custom Logo Component
 const BillBuddyIcon = ({ className = "w-8 h-8" }) => (
@@ -218,7 +218,7 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
               Bill<span className="text-purple-600">Buddy</span>
             </span>
           </div>
-          <p className="text-gray-600 mb-1">© 2024 BillBuddy. All rights reserved.</p>
+          <p className="text-gray-600 mb-1">© 2025 BillBuddy. All rights reserved.</p>
           <p className="text-sm text-gray-500">Empowering patients to challenge unfair medical billing.</p>
         </div>
       </footer>
