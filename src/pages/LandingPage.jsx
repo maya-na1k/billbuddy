@@ -42,16 +42,31 @@ const BillBuddyIcon = ({ className = "w-8 h-8" }) => (
   </svg>
 );
 
+// StatBubble component for visual circular highlights
+const StatBubble = ({ value, title, description, colorClass }) => (
+    <div className={`
+        relative w-44 h-44 md:w-52 md:h-52 
+        ${colorClass} 
+        rounded-full flex flex-col items-center justify-center 
+        p-6 text-center 
+        shadow-2xl hover:shadow-purple-400/50 transition-all duration-300 transform hover:scale-105
+        ring-4 ring-offset-4 ring-offset-purple-50
+    `}>
+        {/* Semi-transparent overlay for a glass/bubble effect */}
+        <div className="absolute inset-0 rounded-full bg-white/50 backdrop-blur-sm"></div>
+        <div className="relative z-10">
+            {/* Reduced from text-4xl to text-3xl */}
+            <div className="text-3xl font-extrabold mb-1 leading-none">{value}</div>
+            <h3 className="text-lg font-bold mb-1">{title}</h3>
+            <p className="text-sm font-medium text-gray-700">{description}</p>
+        </div>
+    </div>
+);
+
+
 export default function LandingPage({ onShowLogin, onShowSignup }) {
 
   // Utility components for reusability
-  const StatItem = ({ label, value }) => (
-    <div className="text-center">
-      <p className="text-xl font-semibold text-gray-700 mb-1">{label}</p>
-      <p className="text-3xl font-extrabold text-purple-700">{value}</p>
-    </div>
-  );
-
   const ScrollingItem = ({ icon, text }) => (
     <div className="flex items-center gap-3">
       <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white backdrop-blur-sm">
@@ -88,24 +103,18 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
           </div>
         </div>
       </nav>
-
-      {/* Hero Section - Maximum Horizontal Space */}
+      
+      {/* Hero Section - Maximum Horizontal Space (Restored original top padding) */}
       <div className="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
-        {/* Statistics Bar */}
-        <div className="flex justify-center gap-12 mb-16 p-4 rounded-xl">
-          <StatItem label="AVERAGE SAVINGS" value="$3,200" />
-          <StatItem label="SUCCESS RATE" value="89%" />
-          <StatItem label="BILLS ANALYZED" value="50,000+" />
-        </div>
-
+        
+        {/* Main Hero Content */}
         <h1 className="text-6xl md:text-7xl font-extrabold text-gray-900 mb-8 leading-tight"> 
           The <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">AI Platform</span> Patients Choose
           for <span className="text-purple-700">Medical Bill Advocacy</span>
         </h1>
 
         <p className="text-xl text-gray-600 mb-12 max-w-6xl mx-auto leading-relaxed"> 
-          BillBuddy helps patients uncover hidden billing errors, lower medical costs, and fight unfair charges—so 
-          they can focus on getting better, not going broke.
+          BillBuddy helps patients uncover hidden billing errors, lower medical costs, and fight unfair charges—so they can focus on getting better, not going broke.
         </p>
 
         {/* Primary CTA */}
@@ -113,19 +122,48 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
           onClick={onShowSignup}
           className="inline-flex items-center bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-xl text-xl font-semibold hover:shadow-xl transform hover:scale-105 transition-all shadow-lg"
         >
-          Analyze Your Bill Free <ArrowRight className="w-5 h-5 ml-2" />
+          Analyze Your Bill <ArrowRight className="w-5 h-5 ml-2" />
         </button>
 
-        {/* Trusted By Section */}
-        <div className="mt-20 pt-8 border-t border-gray-200">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-6">Trusted by patients at</p>
-          <div className="flex justify-center items-center gap-10 sm:gap-16 flex-wrap">
-            {['Mayo Clinic', 'Johns Hopkins', 'Cleveland Clinic', 'Kaiser Permanente'].map((clinic) => (
-              <span key={clinic} className="text-xl md:text-2xl font-bold text-gray-800 opacity-80 hover:opacity-100 transition-opacity">
-                {clinic}
-              </span>
-            ))}
-          </div>
+        {/* New Confidence Text with old 'Trusted By' styling */}
+        <p className="mt-6 text-sm font-medium text-gray-500 uppercase tracking-wider">
+          Takes less than 60 seconds • No payment required • 100% secure upload
+        </p>
+        
+        {/* Removed Trusted By Section */}
+      </div>
+      
+      {/* STATS BUBBLES SECTION (New Position: Below Trusted By section) */}
+      <div className="py-16 bg-white/70">
+        <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-12 text-center">
+                The True Cost of Medical Billing Errors
+            </h2>
+            {/* Increased lg:gap for spacing */}
+            <div className="flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-20">
+                
+                <StatBubble
+                    value="80%"
+                    title="Billing Errors Are Everywhere"
+                    description="Over 80% of U.S. medical bills contain errors"
+                    colorClass="bg-gradient-to-br from-red-200 to-orange-300 text-red-800 ring-red-300"
+                />
+
+                <StatBubble
+                    value="$125B+"
+                    title="Hidden Costs"
+                    description="Billing errors cost Americans $125B+ each year"
+                    colorClass="bg-gradient-to-br from-purple-200 to-pink-300 text-purple-800 ring-purple-300"
+                />
+
+                <StatBubble
+                    value="$200–$3K"
+                    title="Personal Impact"
+                    description="Patients can save $200–$3,000 per bill"
+                    colorClass="bg-gradient-to-br from-green-200 to-emerald-300 text-green-800 ring-green-300"
+                />
+                
+            </div>
         </div>
       </div>
 
@@ -152,7 +190,8 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
           </div>
         </div>
         
-        <style jsx>{`
+        {/* FIXED: Swapped <style jsx> for <style> to fix the React warning */}
+        <style>{`
           @keyframes scroll {
             0% {
               transform: translateX(0);
@@ -170,12 +209,12 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
         `}</style>
       </div>
 
-      {/* Three Simple Steps Section - Flowchart */}
+      {/* Three Simple Steps Section - Flowchart (Original Box Design Restored) */}
       <div className="py-20 bg-white/70">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-extrabold text-gray-900 mb-16 text-center">Three Simple Steps</h2>
           
-          <div className="flex items-center justify-between gap-8">
+          <div className="hidden md:flex items-center justify-between gap-8">
             {/* Step 1 */}
             <div className="flex-1">
               <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-purple-200 hover:shadow-2xl transition-all transform hover:-translate-y-2">
