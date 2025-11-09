@@ -1,10 +1,5 @@
 import { Zap, FileText, FileBadge, DollarSign, ArrowRight } from 'lucide-react';
 
-// Replaced CheckCircle, Shield, FileText, Zap, Lock, Brain, TrendingUp imports with the necessary ones
-
-// This component is updated to reflect the visual style and content of the provided images.
-// The background is changed to a light pastel gradient.
-
 export default function LandingPage({ onShowLogin, onShowSignup }) {
   // Utility components for reusability
   const StatItem = ({ label, value }) => (
@@ -59,7 +54,7 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
         </div>
       </nav>
 
-      {/* Hero Section - Matching Image 1 (Dark Text on Light Background) */}
+      {/* Hero Section - Maximum Horizontal Space */}
       <div className="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
         {/* Statistics Bar (Simulating the top row in a light theme) */}
         <div className="flex justify-center gap-12 mb-16 p-4 rounded-xl">
@@ -68,12 +63,14 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
           <StatItem label="BILLS ANALYZED" value="50,000+" />
         </div>
 
-        <h1 className="text-6xl md:text-7xl font-extrabold text-gray-900 mb-8 leading-tight max-w-4xl mx-auto">
+        {/* Removed max-w class from h1 for full width within px-6 padding */}
+        <h1 className="text-6xl md:text-7xl font-extrabold text-gray-900 mb-8 leading-tight"> 
           The <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">AI Platform</span> Patients Choose
           for <span className="text-purple-700">Medical Bill Advocacy</span>
         </h1>
 
-        <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+        {/* Increased max-w to max-w-6xl for near-full width */}
+        <p className="text-xl text-gray-600 mb-12 max-w-6xl mx-auto leading-relaxed"> 
           BillBuddy helps patients reduce financial burden, strengthen their rights, and ensure fair billing so
           everyone can focus on what matters most—their health and recovery.
         </p>
